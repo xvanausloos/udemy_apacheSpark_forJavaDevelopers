@@ -17,17 +17,19 @@ public class Main {
         inputData.add(90);
         inputData.add(20);
 
-        Logger.getLogger("org.apache").setLevel(Level.WARN);
+        Logger.getLogger("org.apache").setLevel(Level.DEBUG);
 
         SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaRDD<Integer> myRdd =  sc.parallelize(inputData);
         Integer result = myRdd.reduce((value1, value2) -> value1 + value2);
+        //Spark UI becomes available here
+        System.out.println(result);
 
         JavaRDD<Double> sqrtRdd = myRdd.map( value -> Math.sqrt(value) );
         sqrtRdd.collect().forEach(value -> System.out.println(value));
 
-        sc.close();
+        //sc.close(); disable it for leaving Spark UI local available.
 
 
 
