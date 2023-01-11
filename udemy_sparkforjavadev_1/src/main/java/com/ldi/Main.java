@@ -27,6 +27,8 @@ public class Main {
         JavaRDD<Double> sqrtRdd = myRdd.map( value -> Math.sqrt(value) );
         sqrtRdd.collect().forEach(value -> System.out.println(value));
 
+        sc.close();
+
 
 
 
