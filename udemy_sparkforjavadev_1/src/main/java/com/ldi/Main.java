@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,21 @@ public class Main {
 
         SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        JavaRDD<Integer> myRdd =  sc.parallelize(inputData);
-        Integer result = myRdd.reduce((value1, value2) -> value1 + value2);
+
+
+        JavaRDD<Integer> originalIntegers =  sc.parallelize(inputData);
+        Integer result = originalIntegers.reduce((value1, value2) -> value1 + value2);
         //Spark UI becomes available here
         System.out.println(result);
 
-        JavaRDD<Double> sqrtRdd = myRdd.map( value -> Math.sqrt(value) );
-        sqrtRdd.collect().forEach(value -> System.out.println(value));
+        //JavaRDD<Double> sqrtRdd = originalIntegers.map( value -> Math.sqrt(value) );
+        JavaRDD<Tuple2<Integer, Double>> sqrtRdd = originalIntegers.map(value -> new Tuple2<>(value, Math.sqrt(value)));
+        sqrtRdd.foreach(System.out::println); //Java 8 sugar syntax
+        //sqrtRdd.forEach(value -> System.out.println(value));
+        System.out.println(sqrtRdd.count());
+
+        Tuple2<Integer, Double> myValue = new Tuple2<Integer, Double>(9, 3.0);
+
 
         //sc.close(); disable it for leaving Spark UI local available.
 
