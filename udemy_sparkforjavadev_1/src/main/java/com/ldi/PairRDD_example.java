@@ -24,5 +24,6 @@ public class PairRDD_example {
         SparkConf conf = new SparkConf().setAppName("pairRDD example").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
+
     }
 }
