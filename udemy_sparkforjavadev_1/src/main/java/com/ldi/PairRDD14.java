@@ -28,7 +28,7 @@ public class PairRDD14 {
 
         JavaRDD<String> originalLogMessages = sc.parallelize(inputData);
 
-        originalLogMessages.mapToPair( rawValue -> {
+        JavaPairRDD<String, String> pairRDD = originalLogMessages.mapToPair( rawValue -> {
             String[] columns = rawValue.split(":");
             String level = columns[0];
             String date = columns[1];
