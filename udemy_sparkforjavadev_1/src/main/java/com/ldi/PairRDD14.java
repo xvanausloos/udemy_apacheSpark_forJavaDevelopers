@@ -33,7 +33,7 @@ public class PairRDD14 {
             String level = columns[0];
             String date = columns[1];
 
-            return new Tuple2<String, String>(level, date);
+            return new Tuple2<>(level, date);
 
         }  );
 
