@@ -3,14 +3,16 @@ package com.ldi;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PairRDD_example {
-
+public class PairRDD14 {
     public static void main(String[] args) {
         List<String> inputData = new ArrayList<>();
         inputData.add("WARN: Tuesday 4 September 0405");
@@ -24,6 +26,18 @@ public class PairRDD_example {
         SparkConf conf = new SparkConf().setAppName("pairRDD example").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
+        JavaRDD<String> originalLogMessages = sc.parallelize(inputData);
+
+        originalLogMessages.mapToPair( rawValue -> {
+            String[] columns = rawValue.split(":");
+            String level = columns[0];
+            String date = columns[1];
+
+            return new Tuple2<String, String>(level, date);
+
+        }  );
+
+        sc.close();
 
     }
 }
