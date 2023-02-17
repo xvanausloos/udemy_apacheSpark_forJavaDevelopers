@@ -35,9 +35,10 @@ public class ReduceRdd16 {
 
         }  );
 
-        pairRDD.reduceByKey((value1, value2) -> value1 + value2);
+        JavaPairRDD<String, Long> sumsRdd = pairRDD .reduceByKey((value1, value2) -> value1 + value2);
+        sumsRdd.collect().forEach(tuple -> System.out.println(tuple._1 + " has " + tuple._2 + " instances"));
 
-        sc.close();
+        //sc.close();
 
     }
 }
