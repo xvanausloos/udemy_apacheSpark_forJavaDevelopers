@@ -33,7 +33,7 @@ public class ReduceRdd16 {
 
         sumsRdd.collect().forEach(tuple -> System.out.println(tuple._1 + " has " + tuple._2 + " instances"));
 
-        //sc.close();
+        sc.close();
 
     }
 }
