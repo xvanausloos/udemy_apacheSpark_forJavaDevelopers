@@ -5,17 +5,16 @@ import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** Use of FlatMaps
+/** Use of Filter
  * **/
 
 
-public class FlatMaps19 {
+public class Filters20 {
     public static void main(String[] args) {
         List<String> inputData = new ArrayList<>();
         inputData.add("WARN: Tuesday 4 September 0405");
@@ -29,9 +28,15 @@ public class FlatMaps19 {
         SparkConf conf = new SparkConf().setAppName("reduceRDD example").setMaster("local[*]");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
+        /** refactor in one line
         JavaRDD<String> sentences = sc.parallelize(inputData);
         JavaRDD<String> words = sentences.flatMap( value -> Arrays.asList(value.split(" ")).iterator());
-        words.collect().forEach(System.out::println);
+        JavaRDD filteredWords = words.filter( word -> word.length() > 1);
+        filteredWords.collect().forEach(System.out::println);
+         */
+        JavaRDD<String> sentences = sc.parallelize(inputData);
+        JavaRDD<String> filteredWords = sentences.flatMap( value -> Arrays.asList(value.split(" ")).iterator()).filter( word -> word.length() > 1);
+        filteredWords.collect().forEach(System.out::println);
         sc.close();
 
     }
