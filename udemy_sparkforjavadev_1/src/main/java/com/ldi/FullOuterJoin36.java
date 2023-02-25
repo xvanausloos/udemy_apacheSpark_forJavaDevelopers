@@ -2,20 +2,19 @@ package com.ldi;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.orc.impl.ConvertTreeReaderFactory;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import scala.Option;
+import org.apache.spark.api.java.Optional;
 import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** Testing (inner) join example  * **/
+/** Testing full outer join example  * **/
 
 
-public class TestingJoin33 {
+public class FullOuterJoin36 {
     public static void main(String[] args) {
         Logger.getLogger("org.apache").setLevel(Level.WARN);
 
@@ -38,9 +37,8 @@ public class TestingJoin33 {
         JavaPairRDD users = sc.parallelizePairs(usersRaw);
         JavaPairRDD visits = sc.parallelizePairs(visitsRaw);
 
-        //JavaPairRDD<Integer, Tuple2<Integer, String>> joinRdd =  visits.join(users);
-        JavaPairRDD<Integer, Tuple2<Integer, Option<String>>> joinRdd = visits.leftOuterJoin(users);
-        joinRdd.collect().forEach( it -> System.out.println(it._2._2));
+        JavaPairRDD<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>> joinRdd = visits.cartesian(users);
+        joinRdd.collect().forEach(System.out::println);
         sc.close();
 
     }
