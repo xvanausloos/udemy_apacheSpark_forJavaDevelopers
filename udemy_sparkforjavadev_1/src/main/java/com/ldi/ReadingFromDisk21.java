@@ -9,6 +9,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 /** Use of file as input from Disk
  * **/
@@ -25,8 +26,12 @@ public class ReadingFromDisk21 {
 
         JavaRDD<String> sentences = initialRdd;
         JavaRDD<String> filteredWords = sentences.flatMap( value -> Arrays.asList(value.split(" ")).iterator()).filter( word -> word.length() > 1);
+
         filteredWords.collect().forEach(System.out::println);
 
+        //hack for keeping Spark 4040 running
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         sc.close();
 
