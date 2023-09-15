@@ -22,7 +22,7 @@ public class module_62_SparkSQL_TempViews {
         System.out.println(dataset.count());
 
         dataset.createOrReplaceTempView("studentsview");
-        Dataset<Row> results = spark.sql("SELECT * FROM studentsview WHERE subject = 'French'");
+        Dataset<Row> results = spark.sql("SELECT distinct(year) FROM studentsview ORDER BY 'year'");
         results.show();
 
         //hack for keeping Spark 4040 running
