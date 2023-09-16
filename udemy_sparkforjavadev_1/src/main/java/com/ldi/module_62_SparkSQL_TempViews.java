@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class module_62_SparkSQL_TempViews {
 
     public static void main(String[] args) {
-        Logger.getLogger("org.apache").setLevel(Level.DEBUG);
+        Logger.getLogger("org.apache").setLevel(Level.WARN);
         SparkSession spark = SparkSession.builder().appName("module 62").master("local[*]")
                 .config("spark.sql.warehouse.dir","file:///c:/tmp/")
                 .getOrCreate(); //initiate Spark with Spark SQL different than SparkConf
@@ -22,10 +22,10 @@ public class module_62_SparkSQL_TempViews {
         System.out.println(dataset.count());
 
         dataset.createOrReplaceTempView("studentsview");
-        Dataset<Row> results = spark.sql("SELECT distinct(year) FROM studentsview ORDER BY 'year'");
+        Dataset<Row> results = spark.sql("SELECT distinct(year) FROM studentsview ORDER BY year DESC");
         results.show();
 
-        //hack for keeping Spark 4040 running
+        //hack for keeping Spark UI 4040 running
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
 
