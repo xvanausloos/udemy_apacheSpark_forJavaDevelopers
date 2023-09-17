@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /* udemy module 65 Spark SQL date formatting  */
-public class module_65_SparkSQL_dateformatting {
+public class module_66_SparkSQL_grouping {
 
     public static void main(String[] args) {
         Logger.getLogger("org.apache").setLevel(Level.WARN);
-        SparkSession spark = SparkSession.builder().appName("module 65").master("local[*]")
+        SparkSession spark = SparkSession.builder().appName("module 66 multiple groupings").master("local[*]")
                 .config("spark.sql.warehouse.dir","file:///c:/tmp/")
                 .getOrCreate(); //initiate Spark with Spark SQL different than SparkConf
 
@@ -41,8 +41,7 @@ public class module_65_SparkSQL_dateformatting {
         Dataset<Row> dataset = spark.createDataFrame(inMemory, schema);
 
         dataset.createOrReplaceTempView("logging_table");
-        Dataset<Row> results = spark.sql("SELECT level, date_format(datetime, 'M') AS month FROM logging_table");
-
+        Dataset<Row> results = spark.sql("SELECT level, date_format(datetime, 'MMMM') AS month, count(1) AS total FROM logging_table GROUp BY level, month");
         results.show();
 
         //hack for keeping Spark UI 4040 running
