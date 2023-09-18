@@ -26,7 +26,7 @@ public class module_67_SparkSQL_ordering {
                 //" FROM logging_table group by level, month order by nummonth");
 
         Dataset<Row> results = spark.sql("SELECT level, date_format(datetime,'MMMM') as month, count(1) AS total" +
-                " FROM logging_table group by level, month order by cast(first(date_format(datetime, 'M')) as integer)");
+                " FROM logging_table group by level, month order by cast(first(date_format(datetime, 'M')) as integer), level");
 
 
         results = results.drop("nummonth");
