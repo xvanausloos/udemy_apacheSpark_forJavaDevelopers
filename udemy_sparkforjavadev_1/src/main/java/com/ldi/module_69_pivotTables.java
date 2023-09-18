@@ -29,10 +29,10 @@ public class module_69_pivotTables {
                                     date_format(col("datetime"),"M").alias("monthnum").cast(DataTypes.IntegerType));
 
         Object[] months =  new Object[] {"January", "February", "March", "April", "May", "June", "July",
-                "August", "September", "October", "November", "December"};
+                "Augusceemt", "September", "October", "November", "December"};
 
         List<Object> columns = Arrays.asList(months);
-        dataset = dataset.groupBy("level").pivot("month", columns).count();
+        dataset = dataset.groupBy("level").pivot("month", columns).count().na().fill(0);
 
         dataset.show(100);
 
