@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
 import org.apache.spark.sql.types.DataTypes;
 
 import java.util.Scanner;
@@ -21,10 +22,9 @@ public class module_73_pivottable_multip_agg {
 
         Dataset<Row> dataset = spark.read().option("header","true").csv("src/main/resources/exams/students.csv");
 
-        dataset = dataset.groupBy("subject")
-                .agg(max(col("score").cast(DataTypes.IntegerType)).alias("max score") ,
-                    min(col("score").cast(DataTypes.IntegerType)).alias("min score")
-                 );
+        dataset = dataset.groupBy("subject").pivot("year").agg(
+                                                            functions.round(  avg(col("score")), 2),
+                                                            functions.round( stddev(col("score")), 2));
         dataset.show();
 
         //hack for keeping Spark UI 4040 running
