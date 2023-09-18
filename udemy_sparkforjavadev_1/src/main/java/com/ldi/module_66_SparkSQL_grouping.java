@@ -11,6 +11,7 @@ import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -24,6 +25,8 @@ public class module_66_SparkSQL_grouping {
                 .config("spark.sql.warehouse.dir","file:///c:/tmp/")
                 .getOrCreate(); //initiate Spark with Spark SQL different than SparkConf
 
+        /*
+        STAGE 1 inMemory
         List<Row> inMemory = new ArrayList<Row>();
 
         inMemory.add(RowFactory.create("WARN", "2016-12-31 04:19:32"));
@@ -38,11 +41,27 @@ public class module_66_SparkSQL_grouping {
                 new StructField("datetime", DataTypes.StringType, false, Metadata.empty())
         };
         StructType schema = new StructType(fields);
-        Dataset<Row> dataset = spark.createDataFrame(inMemory, schema);
+        */
+        /*Dataset<Row> dataset = spark.createDataFrame(inMemory, schema);
 
         dataset.createOrReplaceTempView("logging_table");
         Dataset<Row> results = spark.sql("SELECT level, date_format(datetime, 'MMMM') AS month, count(1) AS total FROM logging_table GROUp BY level, month");
         results.show();
+        */
+
+        // STAGE 2 large log file
+        Dataset<Row> dataset = spark.read().option("header","true").csv("src/main/resources/biglog.txt");
+        dataset.show(200);
+
+        dataset.createOrReplaceTempView("logging_table");
+
+        Dataset<Row> results = spark.sql("SELECT level, date_format(datetime,'MMMM') as month, count(1) FROM logging_table");
+        //System.out.println(results.count());
+
+        results.createOrReplaceTempView("results_table");
+
+        Dataset<Row> totals = spark.sql("SELECT sum(total) FROM results_table");
+        totals.show();
 
         //hack for keeping Spark UI 4040 running
         Scanner scanner = new Scanner(System.in);
