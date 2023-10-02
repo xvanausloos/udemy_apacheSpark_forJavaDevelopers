@@ -26,10 +26,12 @@ public class module_79_SparkSQLShufflePartition {
         Dataset<Row> dataset = spark.read().option("header","true").csv("src/main/resources/biglog.txt");
         dataset.createOrReplaceTempView("logging_table");
 
+        //this version use SHORTAGGREGATE algorithm
         Dataset<Row> results = spark.sql
-                ("SELECT level, date_format(datetime,'MMMM') as month, count(1) AS total, date_format(datetime,'M') as monthnum" +
-                " FROM logging_table GROUP BY level, month, monthnum ORDER BY monthnum");
-        results.drop("monthnum");
+                ("SELECT level, date_format(datetime,'MMMM') AS month, count(1) AS total, first(date_format(datetime,'M')) AS monthnum" +
+                " FROM logging_table GROUP BY level, month ORDER BY cast(monthnum AS int), level");
+        // results.drop("monthnum");
+
         //dataset = dataset.selectExpr("level", "date_format(datetime,'MMMM') as month");
 /*
         dataset = dataset.select(col("level"),
