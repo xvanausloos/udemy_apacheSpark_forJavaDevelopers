@@ -20,6 +20,9 @@ public class module_79_SparkSQLShufflePartition {
                 .config("spark.sql.warehouse.dir","file:///c:/tmp/")
                 .getOrCreate(); //initiate Spark with Spark SQL different from SparkConf
 
+        //adjust settings for avoiding empty partitions. Avoid idle tasks for empty partitions
+        spark.conf().set("spark.sql.shuffle.partitions", "12");
+
         Dataset<Row> dataset = spark.read().option("header","true").csv("src/main/resources/biglog.txt");
         dataset.createOrReplaceTempView("logging_table");
 
