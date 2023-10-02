@@ -18,17 +18,17 @@ public class module_79_SparkSQLShufflePartition {
         Logger.getLogger("org.apache").setLevel(Level.WARN);
         SparkSession spark = SparkSession.builder().appName("module 68").master("local[*]")
                 .config("spark.sql.warehouse.dir","file:///c:/tmp/")
-                .getOrCreate(); //initiate Spark with Spark SQL different than SparkConf
+                .getOrCreate(); //initiate Spark with Spark SQL different from SparkConf
 
         Dataset<Row> dataset = spark.read().option("header","true").csv("src/main/resources/biglog.txt");
+        dataset.createOrReplaceTempView("logging_table");
 
-        //Dataset<Row> results = spark.sql("SELECT level, date_format(datetime,'MMMM') as month, cast(first(date_format(datetime, 'M')) as integer) as nummonth, count(1) AS total" +
-                //" FROM logging_table group by level, month order by nummonth");
-
-       /* Dataset<Row> results = spark.sql("SELECT level, date_format(datetime,'MMMM') as month, count(1) AS total" +
-                " FROM logging_table group by level, month order by cast(first(date_format(datetime, 'M')) as integer), level");*/
-
+        Dataset<Row> results = spark.sql
+                ("SELECT level, date_format(datetime,'MMMM') as month, count(1) AS total, date_format(datetime,'M') as monthnum" +
+                " FROM logging_table GROUP BY level, month, monthnum ORDER BY monthnum");
+        results.drop("monthnum");
         //dataset = dataset.selectExpr("level", "date_format(datetime,'MMMM') as month");
+/*
         dataset = dataset.select(col("level"),
                                     date_format(col("datetime"), "MMMM").alias("month"),
                                     date_format(col("datetime"),"M").alias("monthnum").cast(DataTypes.IntegerType));
@@ -36,6 +36,9 @@ public class module_79_SparkSQLShufflePartition {
         dataset = dataset.orderBy("monthnum", "level");
         dataset = dataset.drop("monthnum");
         dataset.show(100);
+*/
+        results.show(100);
+        results.explain();
 
         //hack for keeping Spark UI 4040 running
         Scanner scanner = new Scanner(System.in);
