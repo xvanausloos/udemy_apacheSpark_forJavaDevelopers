@@ -27,10 +27,16 @@ public class module_79_SparkSQLShufflePartition {
         dataset.createOrReplaceTempView("logging_table");
 
         //this version use SHORTAGGREGATE algorithm
-        Dataset<Row> results = spark.sql
+        /*Dataset<Row> results = spark.sql
                 ("SELECT level, date_format(datetime,'MMMM') AS month, count(1) AS total, first(date_format(datetime,'M')) AS monthnum" +
-                " FROM logging_table GROUP BY level, month ORDER BY cast(monthnum AS int), level");
-        // results.drop("monthnum");
+                " FROM logging_table GROUP BY level, month ORDER BY cast(monthnum AS int), level");*/
+
+        //this version use HASHAGGREGATE algorithm
+        Dataset<Row> results = spark.sql
+                ("SELECT level, date_format(datetime,'MMMM') AS month, count(1) AS total, first(   cast(date_format(datetime,'M') AS int)) AS monthnum" +
+                        " FROM logging_table GROUP BY level, month ORDER BY cast(monthnum AS int), level");
+
+        results.drop("monthnum");
 
         //dataset = dataset.selectExpr("level", "date_format(datetime,'MMMM') as month");
 /*
