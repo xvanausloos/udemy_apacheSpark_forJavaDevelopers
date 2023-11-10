@@ -46,8 +46,8 @@ public class module_65_SparkSQL_dateformatting {
         results.show();
 
         //hack for keeping Spark UI 4040 running
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
+        /*Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();*/
 
         spark.close();
 

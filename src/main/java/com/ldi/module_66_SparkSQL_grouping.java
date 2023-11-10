@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-/* udemy module 65 Spark SQL date formatting  */
+/* udemy module 66 Spark SQL date formatting  */
 public class module_66_SparkSQL_grouping {
 
     public static void main(String[] args) {
@@ -25,7 +25,8 @@ public class module_66_SparkSQL_grouping {
         SparkSession spark = SparkSession.builder()
                 .appName("module 66 multiple groupings")
                 .master("local[*]")
-                .config("spark.sql.warehouse.dir","/tmpspark")
+                //.config("spark.sql.warehouse.dir","file:/tmpspark")
+                .config("spark.sql.warehouse.dir","file:///c:/tmp/")
                 .getOrCreate(); //initiate Spark with Spark SQL different than SparkConf
 
 
@@ -73,9 +74,9 @@ public class module_66_SparkSQL_grouping {
         //Dataset<Row> totals = spark.sql("SELECT sum(total) FROM results_table");
         //totals.show();
 
-        //hack for keeping Spark UI 4040 running
+       /* //hack for keeping Spark UI 4040 running
         Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
+        scanner.nextLine();*/
 
         spark.close();
 
